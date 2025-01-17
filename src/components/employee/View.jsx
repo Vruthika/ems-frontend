@@ -1,71 +1,85 @@
-import React, { useState, useEffect } from 'react'
-import { useParams } from 'react-router-dom'
-import axios from 'axios'
+import React, { useState, useEffect } from "react";
+import { useParams } from "react-router-dom";
+import axios from "axios";
 
 const View = () => {
-    const { id } = useParams()
-    console.log(id);
+  const { id } = useParams();
+  console.log(id);
 
-    const [employee, setEmployee] = useState(null)
+  const [employee, setEmployee] = useState(null);
 
-    useEffect(() => {
-        const fetchEmployee = async () => {
-            try {
-                const response = await axios.get(`http://localhost:5000/api/employee/${id}`, {
-                    headers: {
-                        "Authorization": `Bearer ${localStorage.getItem('token')}`
-                    }
-                });
-                console.log(response.data);
+  useEffect(() => {
+    const fetchEmployee = async () => {
+      try {
+        const response = await axios.get(
+          `https://ems-backend-self.vercel.app/api/employee/${id}`,
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
+          }
+        );
+        console.log(response.data);
 
-                if (response.data.success) {
-                    setEmployee(response.data.employee)
-                }
-            } catch (error) {
-                if (error.response && !error.response.data.success) {
-                    alert(error.response.data.error);
-                }
-            }
-        };
-        fetchEmployee();
-    }, [])
+        if (response.data.success) {
+          setEmployee(response.data.employee);
+        }
+      } catch (error) {
+        if (error.response && !error.response.data.success) {
+          alert(error.response.data.error);
+        }
+      }
+    };
+    fetchEmployee();
+  }, []);
 
-    return (
-        <>{employee ? (
-            <div className='max-w-3xl mx-auto mt-10 bg-white p-8 rounded-md shadow-md'>
-                <h2 className='text-3xl font-bold mb-8 text-center'>
-                    Employee Details
-                </h2>
-                <div className='grid grid-cols-1 md:grid-cols-2 gap-6'>
-                    <div>
-                        <img src={`http://localhost:5000/${employee.userId.profileImage}`} className='rounded-full border w-72 h-72 object-cover' />
-                    </div>
-                    <div>
-                        <div className='flex space-x-3 mb-5'>
-                            <p className='text-xl font-bold'>Name:</p>
-                            <p className='text-lg font-medium'>{employee.userId.name}</p>
-                        </div>
-                        <div className='flex space-x-3 mb-5'>
-                            <p className='text-xl font-bold'>Employee ID:</p>
-                            <p className='text-lg font-medium'>{employee.employeeId}</p>
-                        </div>
-                        <div className='flex space-x-3 mb-5'>
-                            <p className='text-xl font-bold'>Date of Birth:</p>
-                            <p className='text-lg font-medium'>{new Date(employee.dob).toLocaleDateString()}</p>
-                        </div>
-                        <div className='flex space-x-3 mb-5'>
-                            <p className='text-xl font-bold'>Gender:</p>
-                            <p className='text-lg font-medium'>{employee.gender}</p>
-                        </div>
-                        <div className='flex space-x-3 mb-5'>
-                            <p className='text-xl font-bold'>Department:</p>
-                            <p className='text-lg font-medium'>{employee.department.dept_name}</p>
-                        </div>
-                    </div>
-                </div>
+  return (
+    <>
+      {employee ? (
+        <div className="max-w-3xl mx-auto mt-10 bg-white p-8 rounded-md shadow-md">
+          <h2 className="text-3xl font-bold mb-8 text-center">
+            Employee Details
+          </h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+              <img
+                src={`https://ems-backend-self.vercel.app/${employee.userId.profileImage}`}
+                className="rounded-full border w-72 h-72 object-cover"
+              />
             </div>
-        ) : <div>Loading...</div>}</>
-    )
-}
+            <div>
+              <div className="flex space-x-3 mb-5">
+                <p className="text-xl font-bold">Name:</p>
+                <p className="text-lg font-medium">{employee.userId.name}</p>
+              </div>
+              <div className="flex space-x-3 mb-5">
+                <p className="text-xl font-bold">Employee ID:</p>
+                <p className="text-lg font-medium">{employee.employeeId}</p>
+              </div>
+              <div className="flex space-x-3 mb-5">
+                <p className="text-xl font-bold">Date of Birth:</p>
+                <p className="text-lg font-medium">
+                  {new Date(employee.dob).toLocaleDateString()}
+                </p>
+              </div>
+              <div className="flex space-x-3 mb-5">
+                <p className="text-xl font-bold">Gender:</p>
+                <p className="text-lg font-medium">{employee.gender}</p>
+              </div>
+              <div className="flex space-x-3 mb-5">
+                <p className="text-xl font-bold">Department:</p>
+                <p className="text-lg font-medium">
+                  {employee.department.dept_name}
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      ) : (
+        <div>Loading...</div>
+      )}
+    </>
+  );
+};
 
-export default View
+export default View;
